@@ -2,7 +2,7 @@ import os
 import time
 import datetime
 import inspect
-
+import Config
 
 class Log:
 
@@ -27,13 +27,13 @@ class Log:
 
 
 	def logd(self, message):
-		if self.DEBUG:
+		if Config.DEBUG:
 			self.log("{D} " + str(message))
 		else:
 			return
 
 	def logv(self, message):
-		if self.VERBOSE:
+		if Config.VERBOSE:
 			self.log("{V} " + str(message))
 		else:
 			return
