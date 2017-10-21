@@ -49,8 +49,8 @@ class DatabaseHandler:
     def createS_Table(self, tableName):
         global conn
 
-        sqlCmd = "CREATE TABLE IF NOT EXISTS " + tableName + " (s_num TEXT, date TEXT, shares TEXT, amount TEXT, \
-        open REAL, high REAL, low REAL, close REAL, spreads TEXT, turnover TEXT);"
+        sqlCmd = "CREATE TABLE IF NOT EXISTS " + tableName + " (s_num TEXT, date TEXT, shares INT, amount INT, \
+        open REAL, high REAL, low REAL, close REAL, spreads REAL, turnover INT, newest INT);"
         conn.execute(sqlCmd)
 
     def createStockTable(self):

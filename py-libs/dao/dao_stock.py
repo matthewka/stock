@@ -72,10 +72,11 @@ class stock(object):
                     if "--" == dataArray[i-1]:
                         dataArray[i-1] = "0"
 
-                    if i == 1 or i == 2 or i == 3 or i == 8 or i == 9:
+                    # if i == 1 or i == 2 or i == 3 or i == 8 or i == 9:
+                    if i == 1:
                         dataStr = "'" + dataArray[i - 1] + "'"
                     else:
-                        dataStr = dataArray[i - 1]
+                        dataStr = self.trim(dataArray[i - 1])
 
                 valString += dataStr
                 if (i < 9):
@@ -98,10 +99,11 @@ class stock(object):
                     if "--" == dataArray[i-1]:
                         dataArray[i-1] = 0
 
-                    if i == 1 or i == 2 or i == 3 or i == 8 or i == 9:
+                    # if i == 1 or i == 2 or i == 3 or i == 8 or i == 9:
+                    if i == 1:
                         dataStr = "'" + dataArray[i - 1] + "'"
                     else:
-                        dataStr = dataArray[i - 1]
+                        dataStr = self.trim(dataArray[i - 1])
 
                 valString += dataStr
                 if (i < 9):
@@ -112,6 +114,10 @@ class stock(object):
         except Exception as e:
             Log().loge(e)
             Log().loge(valString)
+
+    def trim(self, data):
+        res = data.replace(",", "")
+        return res
 
     def __str__(self):
 

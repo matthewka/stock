@@ -9,3 +9,7 @@ class dao(object):
     def parsing(self, data):
         # Abstract function
         raise NotImplementedError("parsing function is abstract")
+
+    def trim(self, data):
+        data = data.replace(",", "")
+        return data
