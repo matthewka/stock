@@ -27,16 +27,14 @@ INDEX_TURNOVER  = 8 #u成交筆數
 class StockCrawler(object):
     log = Log()
 
-    def __init__(self, stock_num, date):
-        self.stockNum = stock_num
-        self.date = date
-
-
+    def __init__(self):
         global dbHandler
         dbHandler = DatabaseHandler('')
 
 
-    def run(self):
+    def run(self, stock_num, date):
+        self.stockNum = stock_num
+        self.date = date
         timestamp = int(time.time() * 1000 + 1000000)
         query_url = '{}?response=json&date={}&stockNo={}&_={}'.format(QUERY_URL, self.date, self.stockNum, timestamp)
         self.log.logv(query_url)

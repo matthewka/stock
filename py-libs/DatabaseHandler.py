@@ -57,3 +57,19 @@ class DatabaseHandler:
         global conn
         sqlCmd = "CREATE TABLE IF NOT EXISTS stock (s_num TEXT, s_name TEXT, price REAL);"
         conn.execute(sqlCmd)
+
+    def hasStockTable(self):
+        global conn
+        try:
+            sqlCmd = "SELECT *, COUNT(*) FROM stock;"
+            c = conn.execute(sqlCmd)
+            result = c.fetchone()
+            number_of_rows = result[0]
+            print(number_of_rows)
+            if not number_of_rows == None and int(number_of_rows) > 0:
+                return True
+            else:
+                return False
+        except Exception as e:
+            print(e)
+            return False
