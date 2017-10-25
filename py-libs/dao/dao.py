@@ -13,3 +13,7 @@ class dao(object):
     def trim(self, data):
         data = data.replace(",", "")
         return data
+
+    def trimDate(self, date):
+        date = date.replace("/", "")
+        return date

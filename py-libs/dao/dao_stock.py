@@ -15,15 +15,15 @@ class stock(object):
     INDEX_SPREADS = 7  # u漲跌價差
     INDEX_TURNOVER = 8  # u成交筆數
 
-    date = ""
-    shares = ""
-    amount = ""
-    open = ""
-    high = ""
-    low = ""
-    close = ""
-    spreads = ""
-    turnover = ""
+    date = "" # String
+    shares = "" # Integer
+    amount = "" # Integer
+    open = "" # Float
+    high = "" # Float
+    low = "" # Float
+    close = "" # Float
+    spreads = "" # Float
+    turnover = "" # Integer
 
     dataArray = []
 
@@ -46,21 +46,48 @@ class stock(object):
         global dataArray
 
         try:
-            date = dataArray[self.INDEX_DATE]
-            shares = dataArray[self.INDEX_SHARES]
-            amount = dataArray[self.INDEX_AMOUNT]
+            date = self.trimDate(dataArray[self.INDEX_DATE])
+            shares = self.trim(dataArray[self.INDEX_SHARES])
+            amount = self.trim(dataArray[self.INDEX_AMOUNT])
             open = dataArray[self.INDEX_OPEN]
             high = dataArray[self.INDEX_HIGH]
-            low =  dataArray[self.INDEX_LOW]
-            close =  dataArray[self.INDEX_CLOSE]
+            low = dataArray[self.INDEX_LOW]
+            close = dataArray[self.INDEX_CLOSE]
             spreads = dataArray[self.INDEX_SPREADS]
-            turnover = dataArray[self.INDEX_TURNOVER]
+            turnover = self.trim(dataArray[self.INDEX_TURNOVER])
 
         except Exception as e:
             Log().loge(e)
 
+    def getKeyArray(self):
+        keyArray = ["s_num", "date", "shares", "amount", "open", "high", "low", "close", "spreads", "turnover"]
+        return keyArray
+
     def getKeyString(self):
         return "(s_num, date, shares, amount, open, high, low, close, spreads, turnover)"
+
+    def getValArray(self):
+        valArray = []
+        try:
+            for i in range(0, 10):
+                if i == 0:
+                    valArray.append("'" + self.stockNum + "'")
+                else:
+                    if "--" == dataArray[i-1]:
+                        dataArray[i-1] = "0"
+
+                    # if i == 1 or i == 2 or i == 3 or i == 8 or i == 9:
+                    if i == 1:
+                        dataStr = "'" + self.trimDate(dataArray[i - 1]) + "'"
+                    else:
+                        dataStr = self.trim(dataArray[i - 1])
+
+                    valArray.append(dataStr)
+        except Exception as e:
+            Log().loge(valArray)
+            Log().loge(e)
+
+        return valArray
 
     def getValString(self):
         valString = ""
@@ -74,7 +101,7 @@ class stock(object):
 
                     # if i == 1 or i == 2 or i == 3 or i == 8 or i == 9:
                     if i == 1:
-                        dataStr = "'" + dataArray[i - 1] + "'"
+                        dataStr = "'" + self.trimDate(dataArray[i - 1]) + "'"
                     else:
                         dataStr = self.trim(dataArray[i - 1])
 
@@ -117,7 +144,16 @@ class stock(object):
 
     def trim(self, data):
         res = data.replace(",", "")
+        res = res.replace("X", "")
         return res
+
+    def trimDate(self, date):
+        date = date.replace("/", "")
+        return date
+
+    def getDate(self):
+        global date
+        return date
 
     def __str__(self):
 

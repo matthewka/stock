@@ -47,7 +47,7 @@ class StockCrawler(object):
                              AppleWebKit / 537.36(KHTML, likeGecko) Chrome / 61.0.3163.100Safari / 537.36'})
 
             response = req.get(query_url)
-            # print(response.text)
+            #print(response.text)
             content = json.loads(response.text)
             if 'data' in content.keys():
                 datas = content['data']
@@ -60,8 +60,7 @@ class StockCrawler(object):
             for data in datas:
                 s = stock(self.stockNum, data)
                 global dbHandler
-                dbHandler.insertTable(tableName, s.getKeyString(), s.getValString())
-
+                dbHandler.insertOrUpdateTable(tableName, s.getKeyArray(), s.getValArray(), "date", s.getDate())
         except Exception as e:
             self.log.loge(query_url)
             self.log.loge(e)
@@ -91,9 +90,9 @@ class StockCrawler(object):
                     Log().logv("s_num = %s, s_name = %s" % (s_num, s_name))
                     count += 1
                     tableName = "stock"
-                    keyString = "(s_num, s_name)"
-                    valString = "'" + s_num + "', '" + s_name + "'"
+                    keyArray = ["s_num", "s_name"]
+                    valArray = ["'" + s_num + "'", "'" + s_name + "'"]
                     global dbHandler
-                    dbHandler.insertTable(tableName, keyString, valString)
+                    dbHandler.insertOrUpdateTable(tableName, keyArray, valArray, "s_num", s_num)
             except Exception as e:
                 self.log.loge(e)
