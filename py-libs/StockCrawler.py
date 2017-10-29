@@ -23,7 +23,6 @@ INDEX_CLOSE     = 6 #u收盤價
 INDEX_SPREADS   = 7 #u漲跌價差
 INDEX_TURNOVER  = 8 #u成交筆數
 
-
 class StockCrawler(object):
     log = Log()
 
@@ -31,6 +30,39 @@ class StockCrawler(object):
         global dbHandler
         dbHandler = DatabaseHandler('')
 
+    def fetch(self, stockNum, date):
+        timestamp = int(time.time() * 1000 + 1000000)
+        query_url = '{}?response=json&date={}&stockNo={}&_={}'.format(QUERY_URL, date, stockNum, timestamp)
+        self.log.logv(query_url)
+        try:
+            req = requests.session()
+            req.get('http://mis.twse.com.tw/stock/index.jsp',
+                    headers={'Accept-Language': 'zh-TW',
+                             'Content-Type': 'application/json;charset=UTF-8}',
+                             'User - Agent': 'Mozilla / 5.0(Windows NT 10.0;Win64;x64) \
+                                     AppleWebKit / 537.36(KHTML, likeGecko) Chrome / 61.0.3163.100Safari / 537.36'})
+
+            response = req.get(query_url)
+            # print(response.text)
+            content = json.loads(response.text)
+            if 'data' in content.keys():
+                datas = content['data']
+            else:
+                self.log.loge(content)
+                datas = content['data']
+
+            tableName = "s_" + stockNum
+
+            for data in datas:
+                s = stock(stockNum, data)
+                global dbHandler
+                dbHandler.insertOrUpdateTable(tableName, s.getKeyArray(), s.getValArray(), "date", s.getDate())
+        except Exception as e:
+            self.log.loge(query_url)
+            self.log.loge(e)
+            raise e
+
+        time.sleep(0.3)
 
     def run(self, stock_num, date):
         self.stockNum = stock_num

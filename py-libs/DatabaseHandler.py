@@ -114,6 +114,40 @@ class DatabaseHandler:
             #print("insertTable")
             self.insertTable(tableName, keyString, valString)
 
+    def query(self, tableName, column, order):
+        global conn
+        sqlCmd = "SELECT " + column + "  from " + tableName + " ORDER BY date " + order
+        cursor = conn.execute(sqlCmd)
+        values = cursor.fetchall()
+        vals = []
+        for value in values:
+            vals.append(value)
+
+    def getRecords(self, tableName, column):
+        try:
+            global conn
+            sqlCmd = "SELECT " + column + "  from " + tableName + " ORDER BY date ASC"
+            cursor = conn.execute(sqlCmd)
+            values = cursor.fetchall()
+            vals = []
+            for value in values:
+                vals.append(value)
+        except Exception as e:
+            print(e)
+
+        return vals
+
+    def getCount(self, tableName):
+        sqlCmd = "SELECT COUNT(*) FROM " + tableName
+        try:
+            cursor = conn.execute(sqlCmd)
+            result = cursor.fetchone()
+            return int(result[0])
+        except Exception as e:
+            print(e)
+            return 0
+
+
     def createS_Table(self, tableName):
         global conn
 
