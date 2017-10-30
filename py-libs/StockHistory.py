@@ -25,16 +25,30 @@ class StockHistory():
         self.syncHistory()
 
     def syncHistory(self):
+        print("syncHistory")
         global sc
         global dbHelper
         preCount = 0
+        dbCount = int(dbHelper.getCount(self.dbName))
+        print("preCount: %d, dbCount: %d" % (preCount, dbCount))
         try:
-            while dbHelper.getCount(self.dbName) < Config.DB_RECORD_SIZE:
+            while preCount == 0 or dbCount < Config.DB_RECORD_SIZE:
                 fetchDate = self.getFetchDate(preCount)
                 sc.fetch(self.stockNum, fetchDate)
                 preCount += 1
+                dbCount = dbHelper.getCount(self.dbName)
+
+            self.delOldRecord(dbCount - Config.DB_RECORD_SIZE)
+
         except Exception as e:
             print(e)
+
+    def delOldRecord(self, count):
+        global dbHelper
+        dates = dbHelper.query(self.dbName, "date", "ASC")
+
+        for i in range(0, count):
+            dbHelper.delete(self.dbName, ["date"], [dates[i]])
 
     def getFetchDate(self, preCount):
         year = self.today.year

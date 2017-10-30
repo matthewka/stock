@@ -116,12 +116,33 @@ class DatabaseHandler:
 
     def query(self, tableName, column, order):
         global conn
-        sqlCmd = "SELECT " + column + "  from " + tableName + " ORDER BY date " + order
-        cursor = conn.execute(sqlCmd)
-        values = cursor.fetchall()
         vals = []
-        for value in values:
-            vals.append(value)
+
+        try:
+            sqlCmd = "SELECT " + column + "  from " + tableName + " ORDER BY date " + order
+            cursor = conn.execute(sqlCmd)
+            values = cursor.fetchall()
+            for value in values:
+                vals.append(value[0])
+        except Exception as e:
+            print(e)
+
+        return vals
+
+    def delete(self, tableName, where, whereArgs):
+        global conn
+        whereStr = ""
+        for i in range(0, len(where)):
+            whereStr = where[i] + "=" + whereArgs[i]
+        sqlCmd = "DELETE FROM " + tableName
+        if len(whereStr) > 0:
+            sqlCmd = "{}{}{}".format(sqlCmd, " WHERE ", whereStr)
+
+        print("delete: %s" % sqlCmd)
+
+        cur = conn.cursor()
+        cur.execute(sqlCmd)
+        conn.commit()
 
     def getRecords(self, tableName, column):
         try:
