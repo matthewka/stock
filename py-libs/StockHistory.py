@@ -9,9 +9,11 @@ import numpy as np
 sys.path.append("./py-libs/")
 from StockCrawler import StockCrawler
 from DatabaseHandler import DatabaseHandler
+from LogTool import Log
 import Config
 
 class StockHistory():
+    log = Log()
 
     def __init__(self, stockNum):
         global sc
@@ -25,7 +27,7 @@ class StockHistory():
         self.syncHistory()
 
     def syncHistory(self):
-        print("syncHistory")
+        self.log.logv("syncHistory: %s" % self.stockNum)
         global sc
         global dbHelper
         preCount = 0
@@ -59,7 +61,7 @@ class StockHistory():
                 year -= 1
                 month = 12
             else:
-                month -=1
+                month -= 1
 
         return '{}{:0>2}{}'.format(year, month, "01")
 

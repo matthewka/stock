@@ -31,6 +31,7 @@ class StockCrawler(object):
         dbHandler = DatabaseHandler('')
 
     def fetch(self, stockNum, date):
+        time.sleep(0.5)
         timestamp = int(time.time() * 1000 + 1000000)
         query_url = '{}?response=json&date={}&stockNo={}&_={}'.format(QUERY_URL, date, stockNum, timestamp)
         self.log.logv(query_url)
@@ -61,8 +62,6 @@ class StockCrawler(object):
             self.log.loge(query_url)
             self.log.loge(e)
             raise e
-
-        time.sleep(0.3)
 
     def run(self, stock_num, date):
         self.stockNum = stock_num

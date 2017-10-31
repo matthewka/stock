@@ -49,9 +49,9 @@ def main():
             # print("s_num = %s, s_name = %s" % (row[0], row[1]))
 
 
-    # for stock in stocks:
-    #     for date in dates:
-    #         crawler.run(stock, date)
+    for stock in stocks:
+        StockHistory(stock)
+        time.sleep(1)
 
     endTime = time.time()
 
