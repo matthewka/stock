@@ -8,6 +8,7 @@ import numpy as np
 
 sys.path.append("./py-libs/")
 from StockCrawler import StockCrawler
+from GoogleFinCrawler import GoogleFinCrawler
 from DatabaseHandler import DatabaseHandler
 from LogTool import Log
 import Config
@@ -18,6 +19,8 @@ class StockHistory():
     def __init__(self, stockNum):
         global sc
         sc = StockCrawler()
+        global gc
+        gc = GoogleFinCrawler()
         global dbHelper
         dbHelper = DatabaseHandler('')
 
@@ -28,19 +31,24 @@ class StockHistory():
 
     def syncHistory(self):
         self.log.logv("syncHistory: %s" % self.stockNum)
+        print("syncHistory: %s" % self.stockNum)
         global sc
+        global gc
         global dbHelper
         preCount = 0
         dbCount = int(dbHelper.getCount(self.dbName))
         print("preCount: %d, dbCount: %d" % (preCount, dbCount))
         try:
-            while preCount == 0 or dbCount < Config.DB_RECORD_SIZE:
-                fetchDate = self.getFetchDate(preCount)
-                sc.fetch(self.stockNum, fetchDate)
-                preCount += 1
-                dbCount = dbHelper.getCount(self.dbName)
+            # while preCount == 0 or dbCount < Config.DB_RECORD_SIZE:
+            #     fetchDate = self.getFetchDate(preCount)
+            #     gc.fetch(self.stockNum, fetchDate)
+            #     preCount += 1
+            #     dbCount = dbHelper.getCount(self.dbName)
+            #
+            # #self.delOldRecord(dbCount - Config.DB_RECORD_SIZE)
 
-            self.delOldRecord(dbCount - Config.DB_RECORD_SIZE)
+            fetchDate = self.getFetchDate(preCount)
+            gc.fetch(self.stockNum, fetchDate)
 
         except Exception as e:
             print(e)
@@ -63,7 +71,7 @@ class StockHistory():
             else:
                 month -= 1
 
-        return '{}{:0>2}{}'.format(year, month, "01")
+        return '{}{:0>2}{:0>2}'.format(year, month, "01")
 
     def getCloseHistory(self):
         return self.getHistory(column="close")

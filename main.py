@@ -7,6 +7,7 @@ import time
 sys.path.append("./py-libs/")
 sys.path.append("./py-libs/dao")
 from StockCrawler import StockCrawler
+from GoogleFinCrawler import GoogleFinCrawler
 from DatabaseHandler import DatabaseHandler
 from StockHistory import StockHistory
 from Analyzer import Analyzer
@@ -51,7 +52,7 @@ def main():
 
     for stock in stocks:
         StockHistory(stock)
-        time.sleep(1)
+        time.sleep(0.1)
 
     endTime = time.time()
 
